@@ -28,6 +28,8 @@ let operandOne = "";
 let operandTwo = "";
 let operatorSymbol = "";
 
+equalsButton.addEventListener("click", calculate);
+clearButton.addEventListener("click", clear);
 
 inputs.forEach(input => {
   input.addEventListener("click", processInput);
@@ -35,21 +37,38 @@ inputs.forEach(input => {
     
 operators.forEach(operator => {
   operator.addEventListener("click", (event) => {
-    operatorSymbol = event.target.id;
+    //prevents pressing the operators before any numbers have been selcted
+    if(!operandOne){
+      return
+    }
+    
+    if(operatorSymbol === ""){
+      operatorSymbol = event.target.id;
+    }else{
+      //allows for the chaining of calcs e.g. 12+7(19)-5(14)*3 = 42  
+      calculate();
+      operatorSymbol = event.target.id;
+      
+    }
+    
+
     console.log(operandOne, operatorSymbol, operandTwo)
   })
 })
 
-equalsButton.addEventListener("click", calculate);
- 
 function updateDisplay(num){
   display.textContent = num;
 }
 
-clearButton.addEventListener("click", clear);
-
 function processInput(event){
+    //allows for new calculation to begin if there's a result in the display and operandOne variable
+    if(typeof operandOne === "number" && !operatorSymbol){
+      operandOne = event.target.textContent;
+      updateDisplay(operandOne);
+      return
+    }
     
+    //logic to decide which variable to place input
     if(operatorSymbol === ""){
       operandOne += event.target.textContent;
       updateDisplay(operandOne);
@@ -57,15 +76,24 @@ function processInput(event){
       operandTwo += event.target.textContent;
       updateDisplay(operandTwo);
     }
+
+
     console.log(operandOne, operatorSymbol, operandTwo)
 }
 
 function calculate(){
-  operandOne = Number(operandOne);
-  operandTwo = Number(operandTwo);
-  const result = calculator.operate(operatorSymbol, operandOne, operandTwo);
-  updateDisplay(result);
-  console.log(operandOne, operatorSymbol, operandTwo, result)
+  if(operandOne && operandTwo){
+    operandOne = Number(operandOne);
+    operandTwo = Number(operandTwo);
+    const result = calculator.operate(operatorSymbol, operandOne, operandTwo);
+    updateDisplay(result);
+    
+    operandOne = result;
+    operandTwo = "";
+    operatorSymbol = "";
+    
+    console.log(operandOne, operatorSymbol, operandTwo)
+  }
 }
 
 function clear(){
@@ -75,4 +103,5 @@ function clear(){
   updateDisplay("");
 }
 
+//Can some of the bugs/problems be solved by creating a better/cleaner solution?
 
