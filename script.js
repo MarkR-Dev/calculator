@@ -14,6 +14,7 @@ const calculator = {
         return a / b;
     },
     operate(operator, num1, num2){
+        //maybe pass this an array and destructure it into required varibles?
         return calculator[operator](num1, num2);
     }
 }

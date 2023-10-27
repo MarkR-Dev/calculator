@@ -12,3 +12,98 @@ html {
     padding: 0;
     margin: 0;
 }
+
+body{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: lightgreen;
+}
+  
+#calculator {
+    width: 400px;
+    height: 500px;
+    border: 2px solid black;
+    border-radius: 16px;
+    font-family: monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background-color: grey;
+}
+  
+#display {
+    width: 80%;
+    height: 90px;
+    border: 2px solid black;
+    font-size: 40px;
+    padding: 10px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: darkgreen;
+    font-family: 'Orbitron', sans-serif;
+}
+  
+#edit-input {
+    width: 80%;
+    height: 60px;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+  
+#clear,
+#delete {
+    font-size: 20px;
+    font-weight: bold;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+  
+#clear {
+    background-color: salmon;
+}
+  
+#delete {
+    background-color: lightblue;
+}
+  
+#buttons-container {
+    height: 280px;
+    width: 80%;
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+  
+#buttons-container div {
+    border: 2px solid black;
+    font-weight: bold;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+  
+.operator {
+    background-color: orange;
+}
+  
+.input {
+    background-color: white;
+}
+  
+.equals {
+    background-color: lightyellow;
+}
