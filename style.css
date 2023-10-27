@@ -100,10 +100,11 @@ body{
     background-color: orange;
 }
   
-.input {
+.input,
+#decimal {
     background-color: white;
 }
   
-.equals {
+#equals {
     background-color: lightyellow;
 }
