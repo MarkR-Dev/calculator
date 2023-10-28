@@ -82,12 +82,18 @@ function processInput(event){
 }
 
 function calculate(){
+
+  if(operandTwo === "0" && (operatorSymbol === "divide")){
+    clear();
+    updateDisplay("Can't divide by 0");
+    return
+  }
+  
   if(operandOne && operandTwo){
     operandOne = Number(operandOne);
     operandTwo = Number(operandTwo);
     const result = calculator.operate(operatorSymbol, operandOne, operandTwo);
     updateDisplay(result);
-    
     operandOne = result;
     operandTwo = "";
     operatorSymbol = "";
