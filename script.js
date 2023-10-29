@@ -2,20 +2,19 @@
 
 const calculator = {
     add(a, b){
-        return a + b;
+      return a + b;
     },
     subtract(a, b){
-        return a - b;
+      return a - b;
     },
     multiply(a, b){
-        return a * b;
+      return a * b;
     },
     divide(a, b){
-        return a / b;
+      return a / b;
     },
     operate(operator, num1, num2){
-        //maybe pass this an array and destructure it into required varibles?
-        return calculator[operator](num1, num2);
+      return calculator[operator](num1, num2);
     }
 }
 
@@ -36,39 +35,38 @@ inputs.forEach(input => {
 });
     
 operators.forEach(operator => {
-  operator.addEventListener("click", (event) => {
-    //prevents pressing the operators before any numbers have been selcted
-    if(!operandOne){
-      return
-    }
-    
-    if(operatorSymbol === ""){
-      operatorSymbol = event.target.id;
-    }else{
-      //allows for the chaining of calcs e.g. 12+7(19)-5(14)*3 = 42  
-      calculate();
-      operatorSymbol = event.target.id;
-      
-    }
-    
-
-    console.log(operandOne, operatorSymbol, operandTwo)
-  })
-})
+  operator.addEventListener("click", processOperator);
+});
 
 function updateDisplay(num){
   display.textContent = num;
 }
 
 function processInput(event){
-    //allows for new calculation to begin if there's a result in the display and operandOne variable
+    //Allows for new calculation to begin if there's a result in the display and operandOne variable is currently holding a value
     if(typeof operandOne === "number" && !operatorSymbol){
       operandOne = event.target.textContent;
       updateDisplay(operandOne);
       return
+
+    }else if((operandOne === "0" | operandTwo === "0") && event.target.textContent === "0"){
+      //Removes ability to enter two leading 0's e.g. "00785"
+      return
+
+    }else if((operandOne === "0"  | operandTwo === "0") && event.target.textContent !== "0"){
+      //Stops numbers from leading with a zero e.g. "03"
+      if(operatorSymbol === ""){
+        operandOne = event.target.textContent;
+        updateDisplay(operandOne);
+        return
+      }else{
+        operandTwo = event.target.textContent;
+        updateDisplay(operandTwo);
+        return
+      }
     }
     
-    //logic to decide which variable to place input
+    //Decide which variable to place input
     if(operatorSymbol === ""){
       operandOne += event.target.textContent;
       updateDisplay(operandOne);
@@ -79,6 +77,24 @@ function processInput(event){
 
 
     console.log(operandOne, operatorSymbol, operandTwo)
+}
+
+function processOperator(event){
+   //Prevents pressing the operators before any numbers have been selcted
+   if(!operandOne){
+    return
+  }
+  
+  if(operatorSymbol === ""){
+    operatorSymbol = event.target.id;
+  }else{
+    //Allows for the chaining of calculations e.g. 12+7(19)-5(14)*3 = 42  
+    calculate();
+    operatorSymbol = event.target.id;
+  }
+  
+
+  console.log(operandOne, operatorSymbol, operandTwo)
 }
 
 function calculate(){
@@ -109,5 +125,5 @@ function clear(){
   updateDisplay("");
 }
 
-//Can some of the bugs/problems be solved by creating a better/cleaner solution?
+
 
