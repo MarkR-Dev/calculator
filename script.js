@@ -14,7 +14,16 @@ const calculator = {
       return a / b;
     },
     operate(operator, num1, num2){
-      return calculator[operator](num1, num2);
+
+      let result = calculator[operator](num1, num2);
+
+      //Formats the result if it is a long decimal number by fixing it to 3 decimal places(changes type to string) and then turning the result back into a number with unary "+"
+      if(result % 1 != 0){
+        result = +result.toFixed(3);
+        return result
+      }else{
+        return result
+      }
     }
 }
 
