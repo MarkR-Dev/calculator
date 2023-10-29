@@ -23,12 +23,14 @@ const inputs = document.querySelectorAll(".input");
 const operators = document.querySelectorAll(".operator");
 const equalsButton = document.querySelector("#equals");
 const clearButton = document.querySelector("#clear");
+const deleteButton = document.querySelector("#delete");
 let operandOne = "";
 let operandTwo = "";
 let operatorSymbol = "";
 
 equalsButton.addEventListener("click", calculate);
 clearButton.addEventListener("click", clear);
+deleteButton.addEventListener("click", deleteInput);
 
 inputs.forEach(input => {
   input.addEventListener("click", processInput);
@@ -125,5 +127,14 @@ function clear(){
   updateDisplay("");
 }
 
+function deleteInput(event){
+  if(operatorSymbol){
+    operandTwo = operandTwo.slice(0, operandTwo.length-1);
+    updateDisplay(operandTwo);
+  }else if (typeof operandOne === "string"){
+    operandOne = operandOne.slice(0, operandOne.length-1);
+    updateDisplay(operandOne);
+  }
+}
 
 
