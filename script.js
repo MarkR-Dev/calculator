@@ -27,7 +27,8 @@ const calculator = {
     }
 }
 
-const display = document.querySelector("#display");
+const displayBottom = document.querySelector("#bottom-display");
+const displayTop = document.querySelector("#top-display");
 const inputs = document.querySelectorAll(".input");
 const operators = document.querySelectorAll(".operator");
 const equalsButton = document.querySelector("#equals");
@@ -49,22 +50,42 @@ inputs.forEach(input => {
     
 operators.forEach(operator => {
   operator.addEventListener("click", processOperator);
+  
 });
 
-function updateDisplay(num){
-  display.textContent = num;
+function updateBottomDisplay(num){
+  displayBottom.textContent = num;
+}
+
+function updateTopDisplay(operator){
+  let test = "";
+  
+  if(operator === "add"){
+    test = "+"
+  }else if(operator === "subtract"){
+    test = "-"
+  }else if(operator === "multiply"){
+    test = "*"
+  }else if(operator === "divide"){
+    test = "/"
+  }
+  
+  
+  displayTop.textContent = `${operandOne} ${test} ${operandTwo}`;
 }
 
 function processInput(event){
     //Allows for new calculation to begin if there's a result in the display and operandOne variable is currently holding a value
     if(typeof operandOne === "number" && !operatorSymbol){
       if(event.target.textContent === "."){
+        clear()
         operandOne = "0.";
-        updateDisplay(operandOne);
+        updateBottomDisplay(operandOne);
         return
       }
+      clear();
       operandOne = event.target.textContent;
-      updateDisplay(operandOne);
+      updateBottomDisplay(operandOne);
       return
 
     }else if((operandOne === "0" | operandTwo === "0") && event.target.textContent === "0" && event.target.textContent !== "."){
@@ -75,11 +96,11 @@ function processInput(event){
       //Stops numbers from leading with a zero e.g. "03"
       if(operatorSymbol === ""){
         operandOne = event.target.textContent;
-        updateDisplay(operandOne);
+        updateBottomDisplay(operandOne);
         return
       }else{
         operandTwo = event.target.textContent;
-        updateDisplay(operandTwo);
+        updateBottomDisplay(operandTwo);
         return
       }
     }
@@ -92,7 +113,7 @@ function processInput(event){
         operandOne = "0";
       }
       operandOne += event.target.textContent;
-      updateDisplay(operandOne);
+      updateBottomDisplay(operandOne);
     }else{
       if(operandTwo.includes(".") && event.target.textContent === "."){
         return
@@ -100,7 +121,7 @@ function processInput(event){
         operandTwo = "0";
       }
       operandTwo += event.target.textContent;
-      updateDisplay(operandTwo);
+      updateBottomDisplay(operandTwo);
     }
 
 
@@ -121,7 +142,7 @@ function processOperator(event){
     operatorSymbol = event.target.id;
   }
   
-
+    updateTopDisplay(operatorSymbol);
   console.log(operandOne, operatorSymbol, operandTwo)
 }
 
@@ -129,7 +150,7 @@ function calculate(){
 
   if(operandTwo === "0" && (operatorSymbol === "divide")){
     clear();
-    updateDisplay("Can't divide by 0");
+    updateBottomDisplay("Can't divide by 0");
     return
   }
   
@@ -137,7 +158,8 @@ function calculate(){
     operandOne = Number(operandOne);
     operandTwo = Number(operandTwo);
     const result = calculator.operate(operatorSymbol, operandOne, operandTwo);
-    updateDisplay(result);
+    updateBottomDisplay(result);
+    updateTopDisplay(operatorSymbol);
     operandOne = result;
     operandTwo = "";
     operatorSymbol = "";
@@ -150,16 +172,17 @@ function clear(){
   operandOne = "";
   operandTwo = "";
   operatorSymbol = "";
-  updateDisplay("");
+  updateBottomDisplay("");
+  updateTopDisplay("")
 }
 
 function deleteInput(event){
   if(operatorSymbol){
     operandTwo = operandTwo.slice(0, operandTwo.length-1);
-    updateDisplay(operandTwo);
+    updateBottomDisplay(operandTwo);
   }else if (typeof operandOne === "string"){
     operandOne = operandOne.slice(0, operandOne.length-1);
-    updateDisplay(operandOne);
+    updateBottomDisplay(operandOne);
   }
 }
 
