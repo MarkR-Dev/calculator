@@ -17,9 +17,9 @@ const calculator = {
 
       let result = calculator[operator](num1, num2);
 
-      //Formats the result if it is a long decimal number by fixing it to 3 decimal places(changes type to string) and then turning the result back into a number with unary "+"
-      if(result % 1 != 0){
-        result = +result.toFixed(3);
+      //Formats the result if it is a long decimal number by fixing it to 8 decimal places(changes type to string) and then turning the result back into a number with unary "+"
+      if(result % 1 != 0 && String(result).length > 11){
+        result = +result.toFixed(8);
         return result
       }else{
         return result
@@ -33,6 +33,7 @@ const operators = document.querySelectorAll(".operator");
 const equalsButton = document.querySelector("#equals");
 const clearButton = document.querySelector("#clear");
 const deleteButton = document.querySelector("#delete");
+const decimalInput = document.querySelector("#decimal");
 let operandOne = "";
 let operandTwo = "";
 let operatorSymbol = "";
@@ -40,6 +41,7 @@ let operatorSymbol = "";
 equalsButton.addEventListener("click", calculate);
 clearButton.addEventListener("click", clear);
 deleteButton.addEventListener("click", deleteInput);
+decimalInput.addEventListener("click", processInput);
 
 inputs.forEach(input => {
   input.addEventListener("click", processInput);
@@ -56,15 +58,20 @@ function updateDisplay(num){
 function processInput(event){
     //Allows for new calculation to begin if there's a result in the display and operandOne variable is currently holding a value
     if(typeof operandOne === "number" && !operatorSymbol){
+      if(event.target.textContent === "."){
+        operandOne = "0.";
+        updateDisplay(operandOne);
+        return
+      }
       operandOne = event.target.textContent;
       updateDisplay(operandOne);
       return
 
-    }else if((operandOne === "0" | operandTwo === "0") && event.target.textContent === "0"){
+    }else if((operandOne === "0" | operandTwo === "0") && event.target.textContent === "0" && event.target.textContent !== "."){
       //Removes ability to enter two leading 0's e.g. "00785"
       return
 
-    }else if((operandOne === "0"  | operandTwo === "0") && event.target.textContent !== "0"){
+    }else if((operandOne === "0"  | operandTwo === "0") && event.target.textContent !== "0" && event.target.textContent !== "."){
       //Stops numbers from leading with a zero e.g. "03"
       if(operatorSymbol === ""){
         operandOne = event.target.textContent;
@@ -79,9 +86,19 @@ function processInput(event){
     
     //Decide which variable to place input
     if(operatorSymbol === ""){
+      if(operandOne.includes(".") && event.target.textContent === "."){
+        return
+      }else if(operandOne === "" && event.target.textContent === "."){
+        operandOne = "0";
+      }
       operandOne += event.target.textContent;
       updateDisplay(operandOne);
     }else{
+      if(operandTwo.includes(".") && event.target.textContent === "."){
+        return
+      }else if(operandTwo === "" && event.target.textContent === "."){
+        operandTwo = "0";
+      }
       operandTwo += event.target.textContent;
       updateDisplay(operandTwo);
     }
