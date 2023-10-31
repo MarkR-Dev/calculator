@@ -10,7 +10,6 @@
         <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Roboto:wght@300;700&display=swap" rel="stylesheet">
     </head>
     <body>
-       
         <div id="calculator">
             <div id="display">
               <div id="top-display"></div>
@@ -21,25 +20,25 @@
               <div id="delete">DELETE</div>
             </div>
             <div id="buttons-container">
-                <div class="input">7</div>
-                <div class="input">8</div>
-                <div class="input">9</div>
-                <div class="operator" id="divide">/</div>
+                <div class="input" data-digit="7">7</div>
+                <div class="input" data-digit="8">8</div>
+                <div class="input" data-digit="9">9</div>
+                <div class="operator" id="divide" data-op="/">/</div>
               
-                <div class="input">4</div>
-                <div class="input">5</div>
-                <div class="input">6</div>
-                <div class="operator" id="multiply">*</div>
+                <div class="input" data-digit="4">4</div>
+                <div class="input" data-digit="5">5</div>
+                <div class="input" data-digit="6">6</div>
+                <div class="operator" id="multiply" data-op="*">*</div>
           
-                <div class="input">1</div>
-                <div class="input">2</div>
-                <div class="input">3</div>
-                <div class="operator" id="subtract">-</div>
+                <div class="input" data-digit="1">1</div>
+                <div class="input" data-digit="2">2</div>
+                <div class="input" data-digit="3">3</div>
+                <div class="operator" id="subtract" data-op="-">-</div>
             
-                <div id="decimal">.</div>
-                <div class="input">0</div>
-                <div id="equals">=</div>
-                <div class="operator" id="add">+</div>
+                <div id="decimal" data-digit=".">.</div>
+                <div class="input" data-digit="0">0</div>
+                <div id="equals" data-equals="=" data-enter="Enter">=</div>
+                <div class="operator" id="add" data-op="+">+</div>
             </div>
         <div>
     </body>

@@ -1,30 +1,30 @@
 "use strict"
 
 const calculator = {
-    add(a, b){
-      return a + b;
-    },
-    subtract(a, b){
-      return a - b;
-    },
-    multiply(a, b){
-      return a * b;
-    },
-    divide(a, b){
-      return a / b;
-    },
-    operate(operator, num1, num2){
-
-      let result = calculator[operator](num1, num2);
-
-      //Formats the result if it is a long decimal number by fixing it to 8 decimal places(changes type to string) and then turning the result back into a number with unary "+"
-      if(result % 1 != 0 && String(result).length > 11){
-        result = +result.toFixed(8);
-        return result
-      }else{
-        return result
-      }
+  add(a, b){
+    return a + b;
+  },
+  subtract(a, b){
+    return a - b;
+  },
+  multiply(a, b){
+    return a * b;
+  },
+  divide(a, b){
+    return a / b;
+  },
+  operate(operator, num1, num2){
+    let result = calculator[operator](num1, num2);
+    /*
+    Formats the result if its a long decimal number by fixing it to 8 decimal places(changes type to string)
+    and then turning the result back into a number with unary "+"
+    */
+    if(result % 1 != 0 && String(result).length > 11){
+      result = +result.toFixed(8);
     }
+      
+    return result;
+  }
 }
 
 const displayBottom = document.querySelector("#bottom-display");
@@ -44,6 +44,22 @@ clearButton.addEventListener("click", clear);
 deleteButton.addEventListener("click", deleteInput);
 decimalInput.addEventListener("click", processInput);
 
+// Keypress to handle all character keys and allow for shift+key to get "+" and "*"
+window.addEventListener("keypress", handleKeyboardInput);
+/*
+KeyPress event is invoked only for character (printable) keys, so backspace and escape won't work.
+KeyDown event is raised for all including nonprintable such as Control, Shift, Alt, BackSpace, etc. 
+*/
+window.addEventListener("keydown", event => {
+  if(event.key === "Backspace"){
+    deleteInput();
+  }
+  
+  if(event.key === "Escape"){
+    clear();
+  }
+})
+
 inputs.forEach(input => {
   input.addEventListener("click", processInput);
 });
@@ -58,96 +74,106 @@ function updateBottomDisplay(num){
 }
 
 function updateTopDisplay(operator){
-  let test = "";
+  let currentOperator = "";
   
   if(operator === "add"){
-    test = "+"
+    currentOperator = "+";
   }else if(operator === "subtract"){
-    test = "-"
+    currentOperator = "-";
   }else if(operator === "multiply"){
-    test = "*"
+    currentOperator = "*";
   }else if(operator === "divide"){
-    test = "/"
+    currentOperator = "/";
   }
   
+  displayTop.textContent = `${operandOne} ${currentOperator} ${operandTwo}`;
+}
+
+function processInput(event, key = undefined){
+  let input = "";
+  if(key !== undefined){
+    input = key;
+  }else{
+    input = event.target.textContent;
+  }
   
-  displayTop.textContent = `${operandOne} ${test} ${operandTwo}`;
-}
-
-function processInput(event){
-    //Allows for new calculation to begin if there's a result in the display and operandOne variable is currently holding a value
-    if(typeof operandOne === "number" && !operatorSymbol){
-      if(event.target.textContent === "."){
-        clear()
-        operandOne = "0.";
-        updateBottomDisplay(operandOne);
-        return
-      }
+  //Allows for new calculation to begin if there's a result in the display and operandOne variable is currently holding a value
+  if(typeof operandOne === "number" && !operatorSymbol){
+    if(input === "."){
       clear();
-      operandOne = event.target.textContent;
+      operandOne = "0.";
       updateBottomDisplay(operandOne);
       return
-
-    }else if((operandOne === "0" | operandTwo === "0") && event.target.textContent === "0" && event.target.textContent !== "."){
-      //Removes ability to enter two leading 0's e.g. "00785"
-      return
-
-    }else if((operandOne === "0"  | operandTwo === "0") && event.target.textContent !== "0" && event.target.textContent !== "."){
-      //Stops numbers from leading with a zero e.g. "03"
-      if(operatorSymbol === ""){
-        operandOne = event.target.textContent;
-        updateBottomDisplay(operandOne);
-        return
-      }else{
-        operandTwo = event.target.textContent;
-        updateBottomDisplay(operandTwo);
-        return
-      }
     }
-    
-    //Decide which variable to place input
+    clear();
+    operandOne = input;
+    updateBottomDisplay(operandOne);
+    return
+
+  }else if((operandOne === "0" | operandTwo === "0") && input === "0" && input !== "."){
+    //Removes ability to enter two leading 0's e.g. "00785"
+    return
+
+  }else if((operandOne === "0"  | operandTwo === "0") && input !== "0" && input !== "."){
+    //Stops numbers from leading with a zero e.g. "03"
     if(operatorSymbol === ""){
-      if(operandOne.includes(".") && event.target.textContent === "."){
-        return
-      }else if(operandOne === "" && event.target.textContent === "."){
-        operandOne = "0";
-      }
-      operandOne += event.target.textContent;
+      operandOne = input;
       updateBottomDisplay(operandOne);
+      return
+
     }else{
-      if(operandTwo.includes(".") && event.target.textContent === "."){
-        return
-      }else if(operandTwo === "" && event.target.textContent === "."){
-        operandTwo = "0";
-      }
-      operandTwo += event.target.textContent;
+      operandTwo = input;
       updateBottomDisplay(operandTwo);
+      return
     }
+  }
+    
+  //Decide which variable to place input if all checks have been passed
+  if(operatorSymbol === ""){
+    if(operandOne.includes(".") && input === "."){
+      return
+    }else if(operandOne === "" && input === "."){
+      operandOne = "0";
+    }
+    operandOne += input;
+    updateBottomDisplay(operandOne);
 
-
-    console.log(operandOne, operatorSymbol, operandTwo)
+  }else{
+    if(operandTwo.includes(".") && input === "."){
+      return
+    }else if(operandTwo === "" && input === "."){
+      operandTwo = "0";
+    }
+    operandTwo += input;
+    updateBottomDisplay(operandTwo);
+  }
 }
 
-function processOperator(event){
-   //Prevents pressing the operators before any numbers have been selcted
-   if(!operandOne){
+function processOperator(event, key = undefined){
+  let opInput = "";
+  if(key !== undefined){
+    opInput = key;
+  }else{
+    opInput = event.target.id;
+  }
+  
+  //Prevents pressing the operators before any numbers have been selcted
+  if(!operandOne){
     return
   }
   
   if(operatorSymbol === ""){
-    operatorSymbol = event.target.id;
+    operatorSymbol = opInput;
   }else{
     //Allows for the chaining of calculations e.g. 12+7(19)-5(14)*3 = 42  
     calculate();
-    operatorSymbol = event.target.id;
+    operatorSymbol = opInput;
   }
   
-    updateTopDisplay(operatorSymbol);
-  console.log(operandOne, operatorSymbol, operandTwo)
+  updateTopDisplay(operatorSymbol);
 }
 
 function calculate(){
-
   if(operandTwo === "0" && (operatorSymbol === "divide")){
     clear();
     updateBottomDisplay("Can't divide by 0");
@@ -163,8 +189,6 @@ function calculate(){
     operandOne = result;
     operandTwo = "";
     operatorSymbol = "";
-    
-    console.log(operandOne, operatorSymbol, operandTwo)
   }
 }
 
@@ -176,7 +200,7 @@ function clear(){
   updateTopDisplay("")
 }
 
-function deleteInput(event){
+function deleteInput(){
   if(operatorSymbol){
     operandTwo = operandTwo.slice(0, operandTwo.length-1);
     updateBottomDisplay(operandTwo);
@@ -186,4 +210,24 @@ function deleteInput(event){
   }
 }
 
+function handleKeyboardInput(event){
+  const key = document.querySelector(`div[data-digit="${event.key}"]`);
+  
+  const op = document.querySelector(`div[data-op="${event.key}"]`);
+  
+  const equals = document.querySelector(`div[data-equals="${event.key}"]`);
+  const equalsEnter = document.querySelector(`div[data-enter="${event.key}"]`);
+  
+  if(key){
+    processInput(event, key.textContent);
+  }
+  
+  if(op){
+    processOperator(event, op.id);
+  }
+  
+  if(equals || equalsEnter){
+    calculate();
+  }
+}
 
